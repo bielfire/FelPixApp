@@ -8,12 +8,12 @@ import SpriteKit
 import UIKit
 
 class MenuInicio: SKScene {
-
+    
     // MARK: - Properties
     
     var imagemFundo: SKSpriteNode!
-    var recordePontos: Int = 0
-    var recordeDistancia: Int = 0
+    var recordePontos: Int = 33
+    var recordeDistancia: Int = 100
     
     // MARK: - Overrides
     
@@ -35,6 +35,10 @@ class MenuInicio: SKScene {
             
             if objetoTocado.name == "botaoIniciar" {
                 print("Tocou botao iniciar!")
+                
+                let transicao = SKTransition.doorway(withDuration: 1)
+                let cena = CenaJogo(size: self.size)
+                self.view?.presentScene(cena, transition: transicao)
             }
             
             if objetoTocado.name == "botaoRanking" {
@@ -43,6 +47,10 @@ class MenuInicio: SKScene {
             
             if objetoTocado.name == "botaoLoja" {
                 print("Tocou botao Loja!")
+                
+                let transicao = SKTransition.doorway(withDuration: 1)
+                let cena = CenaLoja(size: self.size)
+                self.view?.presentScene(cena, transition: transicao)
             }
             
             if objetoTocado.name == "botaoSobre" {

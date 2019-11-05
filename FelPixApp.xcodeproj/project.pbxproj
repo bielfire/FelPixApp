@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		433971BA236114AA00CEFE9F /* MenuInicio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433971B9236114AA00CEFE9F /* MenuInicio.swift */; };
+		434815F92372036C00C46CB0 /* CenaJogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434815F82372036C00C46CB0 /* CenaJogo.swift */; };
+		434815FB23720BE700C46CB0 /* CenaLoja.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434815FA23720BE700C46CB0 /* CenaLoja.swift */; };
 		4369D72E23623BB300D8AB58 /* botaoIniciar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4369D70423623BB300D8AB58 /* botaoIniciar@2x.png */; };
 		4369D72F23623BB300D8AB58 /* botaoSair@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4369D70523623BB300D8AB58 /* botaoSair@2x.png */; };
 		4369D73023623BB300D8AB58 /* bgAbout@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4369D70623623BB300D8AB58 /* bgAbout@2x.png */; };
@@ -77,6 +79,8 @@
 
 /* Begin PBXFileReference section */
 		433971B9236114AA00CEFE9F /* MenuInicio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuInicio.swift; sourceTree = "<group>"; };
+		434815F82372036C00C46CB0 /* CenaJogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenaJogo.swift; sourceTree = "<group>"; };
+		434815FA23720BE700C46CB0 /* CenaLoja.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenaLoja.swift; sourceTree = "<group>"; };
 		4369D70423623BB300D8AB58 /* botaoIniciar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "botaoIniciar@2x.png"; sourceTree = "<group>"; };
 		4369D70523623BB300D8AB58 /* botaoSair@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "botaoSair@2x.png"; sourceTree = "<group>"; };
 		4369D70623623BB300D8AB58 /* bgAbout@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgAbout@2x.png"; sourceTree = "<group>"; };
@@ -158,6 +162,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		434815FC23721CC600C46CB0 /* Cenas */ = {
+			isa = PBXGroup;
+			children = (
+				434815F82372036C00C46CB0 /* CenaJogo.swift */,
+				434815FA23720BE700C46CB0 /* CenaLoja.swift */,
+				433971B9236114AA00CEFE9F /* MenuInicio.swift */,
+			);
+			path = Cenas;
+			sourceTree = "<group>";
+		};
+		434815FD23721D0000C46CB0 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				436A43A7235FC56F007CA682 /* GameViewController.swift */,
+				436A43AE235FC572007CA682 /* LaunchScreen.storyboard */,
+				436A43A9235FC56F007CA682 /* Main.storyboard */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		434815FE23721D2600C46CB0 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4369D72D23623BB300D8AB58 /* true-crimes.ttf */,
+				436A43AC235FC572007CA682 /* Assets.xcassets */,
+				4369D70323623BB300D8AB58 /* graficosPixel */,
+				4369D72023623BB300D8AB58 /* sonsFelpudoPixel */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		4369D70323623BB300D8AB58 /* graficosPixel */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,16 +270,11 @@
 		436A439E235FC56F007CA682 /* FelPixApp */ = {
 			isa = PBXGroup;
 			children = (
-				4369D70323623BB300D8AB58 /* graficosPixel */,
-				4369D72023623BB300D8AB58 /* sonsFelpudoPixel */,
-				4369D72D23623BB300D8AB58 /* true-crimes.ttf */,
 				436A43B1235FC572007CA682 /* Info.plist */,
 				436A439F235FC56F007CA682 /* AppDelegate.swift */,
-				436A43A7235FC56F007CA682 /* GameViewController.swift */,
-				433971B9236114AA00CEFE9F /* MenuInicio.swift */,
-				436A43AC235FC572007CA682 /* Assets.xcassets */,
-				436A43AE235FC572007CA682 /* LaunchScreen.storyboard */,
-				436A43A9235FC56F007CA682 /* Main.storyboard */,
+				434815FE23721D2600C46CB0 /* Assets */,
+				434815FC23721CC600C46CB0 /* Cenas */,
+				434815FD23721D0000C46CB0 /* ViewController */,
 			);
 			path = FelPixApp;
 			sourceTree = "<group>";
@@ -441,7 +471,9 @@
 			files = (
 				436A43A8235FC56F007CA682 /* GameViewController.swift in Sources */,
 				436A43A0235FC56F007CA682 /* AppDelegate.swift in Sources */,
+				434815FB23720BE700C46CB0 /* CenaLoja.swift in Sources */,
 				433971BA236114AA00CEFE9F /* MenuInicio.swift in Sources */,
+				434815F92372036C00C46CB0 /* CenaJogo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
