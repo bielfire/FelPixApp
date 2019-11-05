@@ -8,9 +8,12 @@ import SpriteKit
 import UIKit
 
 class MenuInicio: SKScene {
+
+    // MARK: - Properties
     
-    var count = 0
     var imagemFundo: SKSpriteNode!
+    var recordePontos: Int = 0
+    var recordeDistancia: Int = 0
     
     // MARK: - Overrides
     
@@ -21,7 +24,7 @@ class MenuInicio: SKScene {
         setupBotaoRanking()
         setupsetupBotaoLoja()
         setupBotaoSobre()
-        
+        setupLabelRecorde()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -146,13 +149,15 @@ class MenuInicio: SKScene {
         botao.run(animationSequence)
         
         imagemFundo.addChild(botao)
-        
+    }
+    
+    func setupLabelRecorde() {
+        let labelRecordes = SKLabelNode(fontNamed: "True Crimes")
+        labelRecordes.fontSize = 17
+        labelRecordes.text = "Recordes: \(recordePontos) pontos -\(recordeDistancia) metros"
+        labelRecordes.position = CGPoint(x: self.size.width/2, y: self.size.height - 20)
+        labelRecordes.zPosition = 2
+        self.addChild(labelRecordes)
         
     }
 }
-
-
-
-
-
-
