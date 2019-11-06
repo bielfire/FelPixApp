@@ -25,7 +25,6 @@ class CenaLoja: SKScene {
     // MARK: - Overrides
     
     override func didMove(to view: SKView) {
-        
         setupImagemFundo()
         setupBotaoLojaTitulo()
         setupBotaoLojaSemente()
@@ -33,6 +32,19 @@ class CenaLoja: SKScene {
         setupBotaoLojaSombra()
         setupBotaoLojaRestaura()
         setupBotaoSair()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch: AnyObject in touches {
+            let location: CGPoint! = touch.location(in: self)
+            let nodeAtPoint = self.atPoint(location)
+            
+            if (nodeAtPoint.name == "botaoSair") {
+                let transicao = SKTransition.crossFade(withDuration: 1)
+                let cena = MenuInicio(size: self.size)
+                self.view?.presentScene(cena, transition: transicao)
+            }
+        }
     }
     
     // MARK: - Methods
@@ -54,7 +66,6 @@ class CenaLoja: SKScene {
         botaoLojaTitulo.run(animationSequence)
         
         self.addChild(botaoLojaTitulo)
-        
     }
     
     func setupBotaoLojaSemente() {
@@ -149,8 +160,9 @@ class CenaLoja: SKScene {
         
         botaoSair.run(animationSequence)
         
-        self.addChild(botaoSair)
+        botaoSair.name = "botaoSair"
         
+        self.addChild(botaoSair)
     }
     
     func setupImagemFundo() {
@@ -166,4 +178,3 @@ class CenaLoja: SKScene {
         self.addChild(imagemFundo)
     }
 }
-
