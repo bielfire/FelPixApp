@@ -59,7 +59,8 @@ class CenaLoja: SKScene {
         botaoLojaTitulo.zPosition = 1
         botaoLojaTitulo.alpha = 0.2
         
-        let animacaoEntra = SKAction.moveTo(y: self.size.height - botaoLojaTitulo.size.height/2 - 10, duration: 0.75)
+        let newY = self.size.height/2 - botaoLojaTitulo.size.height/2 + 260
+        let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([animacaoEntra, animacaoAlpha ])
         
@@ -78,7 +79,8 @@ class CenaLoja: SKScene {
         botaoLojaSemente.zPosition = 2
         botaoLojaSemente.alpha = 0.2
         
-        let animacaoEntra = SKAction.moveTo(y: self.size.height - botaoLojaSemente.size.height/2 - 58, duration: 0.75)
+        let newY = self.size.height/2 - botaoLojaSemente.size.height/2 + 200
+        let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([SKAction.wait(forDuration: 0.5), animacaoEntra, animacaoAlpha ])
         
@@ -97,7 +99,8 @@ class CenaLoja: SKScene {
         botaoLojaEstrela.zPosition = 2
         botaoLojaEstrela.alpha = 0.2
         
-        let animacaoEntra = SKAction.moveTo(y: self.size.height - botaoLojaEstrela.size.height/2 - 173, duration: 0.75)
+        let newY = self.size.height/2 - botaoLojaEstrela.size.height/2 + 70
+        let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([SKAction.wait(forDuration: 1.0), animacaoEntra, animacaoAlpha ])
         
@@ -116,7 +119,8 @@ class CenaLoja: SKScene {
         botaoLojaSombra.zPosition = 2
         botaoLojaSombra.alpha = 0.2
         
-        let animacaoEntra = SKAction.moveTo(y: self.size.height - botaoLojaSombra.size.height/2 - 292, duration: 0.75)
+        let newY = self.size.height/2 - botaoLojaSombra.size.height/2 - 62
+        let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([SKAction.wait(forDuration: 1.5), animacaoEntra, animacaoAlpha ])
         
@@ -135,7 +139,8 @@ class CenaLoja: SKScene {
         botaoLojaRestaura.zPosition = 2
         botaoLojaRestaura.alpha = 0.2
         
-        let animacaoEntra = SKAction.moveTo(y: self.size.height - botaoLojaRestaura.size.height/2 - 380, duration: 0.75)
+        let newY = self.size.height/2 - botaoLojaRestaura.size.height/2 - 175
+        let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([SKAction.wait(forDuration: 2.0), animacaoEntra, animacaoAlpha ])
         
@@ -154,7 +159,8 @@ class CenaLoja: SKScene {
         botaoSair.zPosition = 2
         botaoSair.alpha = 0.2
         
-        let animacaoEntra = SKAction.moveTo(y: self.size.height - botaoSair.size.height/2 - 418, duration: 0.75)
+        let newY = self.size.height/2 - botaoSair.size.height/2 - 220
+        let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([SKAction.wait(forDuration: 2.5), animacaoEntra, animacaoAlpha ])
         
