@@ -17,7 +17,7 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
 
         let size = UIScreen.main.bounds.size
-        let scene = CenaLoja(size: size)
+        let scene = CenaJogo(size: size)
         scene.scaleMode = .aspectFill
         
         

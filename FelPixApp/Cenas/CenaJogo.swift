@@ -10,12 +10,14 @@ import SpriteKit
 
 class CenaJogo: SKScene {
     
-    //Override
+    // MRK: - Properties
     
+    var felpudo = SKSpriteNode()
+    var _comecou: Bool = false
+    
+    // MARK: - Override
     
     override func didMove(to view: SKView) {
-        self.backgroundColor = UIColor.blue
-        
         let objetoDummyMoveCena = SKNode()
         let moveFundo = SKAction.moveBy(x: -self.size.width, y: 0, duration: 3)
         let reposicionaFundo = SKAction.moveBy(x: self.size.width, y: 0, duration: 0)
@@ -39,7 +41,6 @@ class CenaJogo: SKScene {
         
         self.addChild(objetoDummyMoveCena)
         
-        var felpudo = SKSpriteNode()
         var arrayImagensFelpudo: [SKTexture] = []
         var animacaoFelpudoVoa = SKAction()
         
@@ -56,6 +57,68 @@ class CenaJogo: SKScene {
         felpudo.position.y = self.size.height/2
         felpudo.zPosition = 10
         felpudo.run(SKAction.repeatForever(animacaoFelpudoVoa))
+        
         self.addChild(felpudo)
+        
+        let chaoDummy = SKNode()
+        chaoDummy.position = CGPoint(x: self.size.width/2, y: -100)
+        chaoDummy.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width:self.frame.size.width, height:1))
+        chaoDummy.physicsBody?.isDynamic = false
+        chaoDummy.name = "Chao"
+        
+        self.addChild(chaoDummy)
+        
+        let tetoDummy = SKNode()
+        tetoDummy.position = CGPoint(x:self.size.width/2, y:self.size.height+100)
+        tetoDummy.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.frame.size.width, height: 1))
+        tetoDummy.physicsBody?.isDynamic = false
+        tetoDummy.name = "Chao"
+        
+        self.addChild(tetoDummy)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        if !_comecou {
+            felpudo.physicsBody = SKPhysicsBody(circleOfRadius: felpudo.size.height / 2)
+            felpudo.physicsBody?.isDynamic = true
+            felpudo.physicsBody?.allowsRotation = false
+            felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+            
+            _comecou = true
+        }
+            
+        else {
+            felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+        }
+    }
+    
+    override func update(_ currentTime: CFTimeInterval) {
+        if _comecou {
+            let num = felpudo.physicsBody!.velocity.dy as CGFloat
+            felpudo.zRotation = self.empinada(min: -1, max: 0.5, valor: num * 0.001)
+        }
+    }
+    
+    // MARK: - Methods
+    
+    func empinada(min: CGFloat, max: CGFloat, valor: CGFloat) -> CGFloat {
+        if ( valor > max ) {
+            return max
+        }
+            
+        else if ( valor < min ) {
+            return min
+        }
+            
+        else {
+            return valor
+        }
+    //}
+    
+    //func sorteiaObjetos() {
+    //    criaObjetoCanos()
+    //    _ = Timer.scheduledTime
+    //}
 }

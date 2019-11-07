@@ -139,7 +139,7 @@ class CenaLoja: SKScene {
         botaoLojaRestaura.zPosition = 2
         botaoLojaRestaura.alpha = 0.2
         
-        let newY = self.size.height/2 - botaoLojaRestaura.size.height/2 - 175
+        let newY = self.size.height/2 - botaoLojaRestaura.size.height/2 - 160
         let animacaoEntra = SKAction.moveTo(y: newY, duration: 0.75)
         let animacaoAlpha = SKAction.fadeAlpha(to: 1, duration: 0.25)
         let animationSequence = SKAction.sequence([SKAction.wait(forDuration: 2.0), animacaoEntra, animacaoAlpha ])
