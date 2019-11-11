@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import Foundation
 
 class CenaJogo: SKScene {
     
@@ -14,11 +15,11 @@ class CenaJogo: SKScene {
     
     var felpudo = SKSpriteNode()
     var _comecou: Bool = false
+    let objetoDummyMoveCena = SKNode()
     
     // MARK: - Override
     
     override func didMove(to view: SKView) {
-        let objetoDummyMoveCena = SKNode()
         let moveFundo = SKAction.moveBy(x: -self.size.width, y: 0, duration: 3)
         let reposicionaFundo = SKAction.moveBy(x: self.size.width, y: 0, duration: 0)
         let sequence = SKAction.sequence([moveFundo, reposicionaFundo])
@@ -86,6 +87,8 @@ class CenaJogo: SKScene {
             felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
             
             _comecou = true
+            _ = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+           
         }
             
         else {
@@ -94,7 +97,7 @@ class CenaJogo: SKScene {
         }
     }
     
-    override func update(_ currentTime: CFTimeInterval) {
+    override func update( _ currentTime: CFTimeInterval) {
         if _comecou {
             let num = felpudo.physicsBody!.velocity.dy as CGFloat
             felpudo.zRotation = self.empinada(min: -1, max: 0.5, valor: num * 0.001)
@@ -115,10 +118,56 @@ class CenaJogo: SKScene {
         else {
             return valor
         }
-    //}
+    }
     
-    //func sorteiaObjetos() {
-    //    criaObjetoCanos()
-    //    _ = Timer.scheduledTime
-    //}
+    @objc func sorteiaObjetos() {
+        criaObjetoCanos()
+        _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+        
+    }
+    @objc func criaObjetoCanos() {
+        let vao = SKNode()
+        let objetoCanoCima = SKSpriteNode(imageNamed: "canoCima")
+        let objetoCanoBaixo = SKSpriteNode(imageNamed: "canoBaixo")
+        
+        let moveCano = SKAction.moveBy(x: -self.frame.size.width * 3, y: 0, duration: TimeInterval(4 / speed))
+        let apagaCano = SKAction.removeFromParent()
+        let sequenciaCano = SKAction.sequence([moveCano, apagaCano])
+        let alturaVao = CGFloat(200)
+        
+        objetoCanoBaixo.setScale(3 * 0.75)
+        objetoCanoCima.setScale(3 * 0.75)
+        
+        let numeroRandom = arc4random() % UInt32(100)
+        let alturaRandom = CGFloat(numeroRandom) - 50
+        
+        objetoCanoBaixo.position.x = self.size.width + objetoCanoBaixo.size.width / 2 + 10
+        objetoCanoBaixo.position.y = alturaRandom
+        objetoCanoBaixo.texture!.filteringMode = .nearest
+        objetoCanoBaixo.physicsBody = SKPhysicsBody(rectangleOf: objetoCanoBaixo.size)
+        objetoCanoBaixo.physicsBody?.isDynamic = false
+        objetoCanoBaixo.name = "canoBaixo"
+        objetoCanoBaixo.run(sequenciaCano)
+        
+        objetoDummyMoveCena.addChild(objetoCanoBaixo)
+        
+        objetoCanoCima.position.x = objetoCanoBaixo.position.x
+        objetoCanoCima.position.y = objetoCanoBaixo.position.y + objetoCanoCima.size.height + alturaVao
+        objetoCanoCima.texture!.filteringMode = .nearest
+        objetoCanoCima.physicsBody = SKPhysicsBody(rectangleOf: objetoCanoCima.size)
+        objetoCanoCima.physicsBody?.isDynamic = false
+        objetoCanoCima.name = "canoCima"
+        objetoCanoCima.run(sequenciaCano)
+        
+        objetoDummyMoveCena.addChild(objetoCanoCima)
+        
+        vao.position.x = objetoCanoBaixo.position.x
+        vao.position.y = objetoCanoBaixo.position.y + objetoCanoBaixo.size.height / 2 + alturaVao / 2
+        vao.physicsBody = SKPhysicsBody(rectangleOf:CGSize(width: 3, height: self.size.height * 2))
+        vao.physicsBody?.isDynamic = false
+        vao.name = "vao"
+        vao.run(sequenciaCano)
+        
+        objetoDummyMoveCena.addChild(vao)
+    }
 }
