@@ -9,17 +9,25 @@
 import SpriteKit
 import Foundation
 
-class CenaJogo: SKScene {
+class CenaJogo: SKScene, SKPhysicsContactDelegate {
     
     // MRK: - Properties
     
     var felpudo = SKSpriteNode()
     var _comecou: Bool = false
+    var _acabou = false
     let objetoDummyMoveCena = SKNode()
+    let grupoFelpudo: UInt32 = 1
+    let grupoCano: UInt32 = 2
+    let grupoMarcadores: UInt32 = 0
+    var imagemFundo: SKSpriteNode = SKSpriteNode()
     
     // MARK: - Override
     
     override func didMove(to view: SKView) {
+        self.backgroundColor = UIColor.black
+        self.physicsWorld.contactDelegate = self
+        
         let moveFundo = SKAction.moveBy(x: -self.size.width, y: 0, duration: 3)
         let reposicionaFundo = SKAction.moveBy(x: self.size.width, y: 0, duration: 0)
         let sequence = SKAction.sequence([moveFundo, reposicionaFundo])
@@ -86,9 +94,13 @@ class CenaJogo: SKScene {
             felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
             
+            felpudo.physicsBody?.categoryBitMask = grupoFelpudo
+            felpudo.physicsBody?.contactTestBitMask = grupoCano
+            felpudo.physicsBody?.collisionBitMask = grupoMarcadores
+            
             _comecou = true
             _ = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
-           
+            
         }
             
         else {
@@ -119,9 +131,10 @@ class CenaJogo: SKScene {
             return valor
         }
     }
-    
     @objc func sorteiaObjetos() {
-        criaObjetoCanos()
+        let sorteiaObjeto = Int(arc4random_uniform(2) + 1)
+        if sorteiaObjeto == 1 {criaObjetoCanos()}
+        if sorteiaObjeto == 2 {criaObjetoSemente()}
         _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
         
     }
@@ -146,7 +159,7 @@ class CenaJogo: SKScene {
         objetoCanoBaixo.texture!.filteringMode = .nearest
         objetoCanoBaixo.physicsBody = SKPhysicsBody(rectangleOf: objetoCanoBaixo.size)
         objetoCanoBaixo.physicsBody?.isDynamic = false
-        objetoCanoBaixo.name = "canoBaixo"
+        objetoCanoBaixo.name = "cano"
         objetoCanoBaixo.run(sequenciaCano)
         
         objetoDummyMoveCena.addChild(objetoCanoBaixo)
@@ -156,7 +169,7 @@ class CenaJogo: SKScene {
         objetoCanoCima.texture!.filteringMode = .nearest
         objetoCanoCima.physicsBody = SKPhysicsBody(rectangleOf: objetoCanoCima.size)
         objetoCanoCima.physicsBody?.isDynamic = false
-        objetoCanoCima.name = "canoCima"
+        objetoCanoCima.name = "cano"
         objetoCanoCima.run(sequenciaCano)
         
         objetoDummyMoveCena.addChild(objetoCanoCima)
@@ -166,8 +179,63 @@ class CenaJogo: SKScene {
         vao.physicsBody = SKPhysicsBody(rectangleOf:CGSize(width: 3, height: self.size.height * 2))
         vao.physicsBody?.isDynamic = false
         vao.name = "vao"
+        
+        vao.physicsBody?.collisionBitMask = grupoMarcadores
+        vao.physicsBody?.categoryBitMask = grupoMarcadores
+        vao.physicsBody?.contactTestBitMask = grupoFelpudo
+        
         vao.run(sequenciaCano)
         
         objetoDummyMoveCena.addChild(vao)
+        
+    }
+    func criaObjetoSemente() {
+        var itemSemente = SKSpriteNode (imageNamed: "semente1")
+        let imagSeed1 = SKTexture(imageNamed: "semente1")
+        let imagSeed2 = SKTexture(imageNamed: "semente2")
+        let arrayImagensSemente: [SKTexture] = [imagSeed1, imagSeed2]
+        let moveCano = SKAction.moveBy(x: -self.frame.size.width * 3, y: 0, duration: TimeInterval(4 / speed))
+        let apagaCano = SKAction.removeFromParent()
+        let sequenciaCano = SKAction.sequence([moveCano, apagaCano])
+        
+        itemSemente = SKSpriteNode(texture: imagSeed1)
+        itemSemente.setScale(3 * 1.3)
+        itemSemente.texture!.filteringMode = .nearest
+        
+        itemSemente.physicsBody = SKPhysicsBody(rectangleOf: itemSemente.size)
+        itemSemente.physicsBody?.isDynamic = false
+        itemSemente.physicsBody?.collisionBitMask = grupoMarcadores
+        itemSemente.physicsBody?.categoryBitMask = grupoMarcadores
+        itemSemente.physicsBody?.contactTestBitMask = grupoFelpudo
+        itemSemente.name = "Semente"
+        itemSemente.run(SKAction.repeatForever(SKAction.animate(withNormalTextures: arrayImagensSemente, timePerFrame: 0.35)))
+        
+        let objeParent = SKNode()
+        let randomPosicaoItem = CGFloat(arc4random_uniform(100)) - 50
+        objeParent.position.x = self.size.width + 100
+        objeParent.position.y = self.size.height / 2 + randomPosicaoItem
+        objeParent.run(sequenciaCano)
+        objeParent.addChild(itemSemente)
+        
+        objetoDummyMoveCena.addChild(objeParent)
+        
+    }
+    func didEnd(_ contact: SKPhysicsContact) {
+        if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
+            if(contact.bodyA.node?.name == "vao") {
+                contact.bodyA.node?.removeFromParent()
+            }
+        }
+    }
+    func didBegin(_ contact: SKPhysicsContact) {
+        if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
+        }
+        
+        if (contact.bodyA.node?.name == "cano") {
+            _acabou = true
+            objetoDummyMoveCena.speed = 0
+            imagemFundo.speed = 0
+            felpudo.physicsBody?.applyImpulse(CGVector(dx: -300, dy: -50))
+        }
     }
 }
