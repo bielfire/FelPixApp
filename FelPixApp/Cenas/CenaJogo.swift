@@ -21,6 +21,19 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     let grupoCano: UInt32 = 2
     let grupoMarcadores: UInt32 = 0
     var imagemFundo: SKSpriteNode = SKSpriteNode()
+    var score: Int = 0
+    var distanciaPercorrida: Int = 0
+    var numeroItemEstrelas: Int = 0
+    var numeroItemSementes: Int = 0
+    var hudSemente = SKSpriteNode()
+    var hudEstrela = SKSpriteNode()
+    var sementesLabel = SKLabelNode()
+    var estrelasLabel = SKLabelNode()
+    var distanciaLabel = SKLabelNode()
+    var scoreLabel = SKLabelNode()
+    var testoInicio = SKLabelNode()
+    let autoScaleAndRemoveAction = SKAction.sequence([SKAction.scale(to: 3.5, duration: 0.15), SKAction.removeFromParent()])
+    let alphaAction = SKAction.fadeAlpha(by: 0, duration: 0.15)
     
     // MARK: - Override
     
@@ -84,6 +97,76 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         tetoDummy.name = "Chao"
         
         self.addChild(tetoDummy)
+        
+        hudSemente = SKSpriteNode(imageNamed: "semente1")
+        hudEstrela = SKSpriteNode(imageNamed: "estrela")
+        
+        hudSemente.name = "hudSemente"
+        hudEstrela.name = "hudEstrela"
+        
+        hudEstrela.texture!.filteringMode = .nearest
+        hudSemente.texture!.filteringMode = .nearest
+        
+        hudSemente.size.width = 85
+        hudSemente.size.height = 85
+        hudEstrela.size.width = 85
+        hudEstrela.size.height = 85
+        
+        hudEstrela.position.x = self.size.width - hudEstrela.size.width / 2 - 10
+        hudEstrela.position.y = hudEstrela.size.height / 2 + 10
+        hudSemente.position.x = hudSemente.size.width / 2 + 10
+        hudSemente.position.y = hudSemente.size.height / 2 + 10
+        
+        distanciaLabel = SKLabelNode()
+        distanciaLabel.fontName = "True Crimes"
+        distanciaLabel.fontSize = 17
+        distanciaLabel.text = "Distancia: \(distanciaPercorrida) m."
+        distanciaLabel.position.x = 10
+        distanciaLabel.position.y = self.frame.size.height - 30
+        distanciaLabel.horizontalAlignmentMode = .left
+        distanciaLabel.zPosition = 11
+        
+        sementesLabel = SKLabelNode()
+        sementesLabel.fontName = "True Crimes"
+        sementesLabel.fontSize = 47
+        sementesLabel.fontColor = UIColor.orange
+        
+        sementesLabel.text = "\(numeroItemSementes)"
+        hudSemente.zPosition = 12
+        hudEstrela.zPosition = 12
+        
+        sementesLabel.zPosition = 12
+        
+        estrelasLabel = SKLabelNode()
+        estrelasLabel.fontName = "True Crimes"
+        estrelasLabel.fontSize = 47
+        estrelasLabel.fontColor = UIColor.black
+        estrelasLabel.text = "\(numeroItemEstrelas)"
+        estrelasLabel.zPosition = 12
+        
+        sementesLabel.position.y -= 21
+        estrelasLabel.position.y -= 21
+        
+        sementesLabel.name = "Hud Semente"
+        estrelasLabel.name = "Hud Estrela"
+        
+        scoreLabel = SKLabelNode()
+        scoreLabel.fontName = "True Crimes"
+        scoreLabel.fontSize = 130
+        scoreLabel.text = "0"
+        scoreLabel.position.x = self.frame.midX
+        scoreLabel.position.y = self.frame.size.height - 140
+        scoreLabel.alpha = 0.65
+        scoreLabel.zPosition = 11
+        scoreLabel.text = "\(score)"
+        
+        self.addChild(scoreLabel)
+        self.addChild(hudSemente)
+        self.addChild(hudEstrela)
+        self.addChild(distanciaLabel)
+        hudSemente.addChild(sementesLabel)
+        hudEstrela.addChild(estrelasLabel)
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
@@ -100,15 +183,12 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             
             _comecou = true
             _ = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
-            
         }
-            
         else {
             felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
         }
     }
-    
     override func update( _ currentTime: CFTimeInterval) {
         if _comecou {
             let num = felpudo.physicsBody!.velocity.dy as CGFloat
@@ -131,13 +211,17 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             return valor
         }
     }
+    
     @objc func sorteiaObjetos() {
-        let sorteiaObjeto = Int(arc4random_uniform(2) + 1)
+        let sorteiaObjeto = Int(arc4random_uniform(4) + 1)
         if sorteiaObjeto == 1 {criaObjetoCanos()}
         if sorteiaObjeto == 2 {criaObjetoSemente()}
-        _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+        if sorteiaObjeto == 3 {criaObjetoEstrela()}
+        if sorteiaObjeto == 4 {criaObjetoFlecha()}
         
+        _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
     }
+    
     @objc func criaObjetoCanos() {
         let vao = SKNode()
         let objetoCanoCima = SKSpriteNode(imageNamed: "canoCima")
@@ -187,8 +271,8 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         vao.run(sequenciaCano)
         
         objetoDummyMoveCena.addChild(vao)
-        
     }
+    
     func criaObjetoSemente() {
         var itemSemente = SKSpriteNode (imageNamed: "semente1")
         let imagSeed1 = SKTexture(imageNamed: "semente1")
@@ -218,8 +302,60 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         objeParent.addChild(itemSemente)
         
         objetoDummyMoveCena.addChild(objeParent)
-        
     }
+    
+    func criaObjetoEstrela() {
+        let itemEstrela = SKSpriteNode (imageNamed: "estrela")
+        let moveCano = SKAction.moveBy(x: -self.frame.size.width * 3, y: 0, duration: TimeInterval(4 / speed))
+        let apagaCano = SKAction.removeFromParent()
+        let sequenciaCano = SKAction.sequence([moveCano, apagaCano])
+        
+        itemEstrela.setScale(3 * 1.3)
+        itemEstrela.texture!.filteringMode = .nearest
+        
+        itemEstrela.physicsBody = SKPhysicsBody(rectangleOf: itemEstrela.size)
+        itemEstrela.physicsBody?.isDynamic = false
+        itemEstrela.physicsBody?.collisionBitMask = grupoMarcadores
+        itemEstrela.physicsBody?.categoryBitMask = grupoMarcadores
+        itemEstrela.physicsBody?.contactTestBitMask = grupoFelpudo
+        itemEstrela.name = "Estrela"
+        
+        let objeParent = SKNode()
+        let randomPosicaoItem = CGFloat(arc4random_uniform(100)) - 50
+        objeParent.position.x = self.size.width + 100
+        objeParent.position.y = self.size.height / 2 + randomPosicaoItem
+        objeParent.run(sequenciaCano)
+        objeParent.addChild(itemEstrela)
+        
+        objetoDummyMoveCena.addChild(objeParent)
+    }
+    
+    func criaObjetoFlecha() {
+        let itemFlecha = SKSpriteNode (imageNamed: "flecha")
+        let moveCano = SKAction.moveBy(x: -self.size.width * 2, y: 0, duration: TimeInterval(2 / speed))
+        let apagaCano = SKAction.removeFromParent()
+        let sequenciaCano = SKAction.sequence([moveCano, apagaCano])
+        
+        itemFlecha.setScale(3 * 1.3)
+        itemFlecha.texture!.filteringMode = .nearest
+        
+        itemFlecha.physicsBody = SKPhysicsBody(rectangleOf: itemFlecha.size)
+        itemFlecha.physicsBody?.isDynamic = false
+        itemFlecha.physicsBody?.collisionBitMask = grupoMarcadores
+        itemFlecha.physicsBody?.categoryBitMask = grupoMarcadores
+        itemFlecha.physicsBody?.contactTestBitMask = grupoFelpudo
+        itemFlecha.name = "cano"
+        
+        let objeParent = SKNode()
+        let randomPosicaoItem = CGFloat(arc4random_uniform(100)) - 50
+        objeParent.position.x = self.size.width + 100
+        objeParent.position.y = self.size.height / 2 + randomPosicaoItem
+        objeParent.run(sequenciaCano)
+        objeParent.addChild(itemFlecha)
+        
+        objetoDummyMoveCena.addChild(objeParent)
+    }
+    
     func didEnd(_ contact: SKPhysicsContact) {
         if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
             if(contact.bodyA.node?.name == "vao") {
@@ -231,11 +367,35 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
         }
         
-        if (contact.bodyA.node?.name == "cano") {
+        let bodyANode = contact.bodyA.node
+        
+        if (bodyANode?.name == "cano") {
             _acabou = true
             objetoDummyMoveCena.speed = 0
             imagemFundo.speed = 0
-            felpudo.physicsBody?.applyImpulse(CGVector(dx: -300, dy: -50))
+            felpudo.physicsBody?.applyImpulse(CGVector(dx: -100, dy: 0))
         }
+        
+        if(bodyANode?.name == "Semente") {
+            self.criaFumacinha(objetoPos: bodyANode!.parent!.position)
+            bodyANode?.removeFromParent()
+        }
+        
+        if(bodyANode?.name == "Estrela") {
+            self.criaFumacinha(objetoPos: bodyANode!.parent!.position)
+            bodyANode?.removeFromParent()
+        }
+    }
+    
+    //func criaFumacinha(objeto: SKNode) {
+    func criaFumacinha(objetoPos: CGPoint) {
+        let fumacinha = SKSpriteNode(imageNamed: "fumacinha")
+        //fumacinha.position = objeto.position
+        fumacinha.position = objetoPos
+        fumacinha.run(autoScaleAndRemoveAction)
+        fumacinha.run(alphaAction)
+        fumacinha.texture!.filteringMode = .nearest
+        fumacinha.zPosition = 20
+        objetoDummyMoveCena.addChild(fumacinha)
     }
 }
