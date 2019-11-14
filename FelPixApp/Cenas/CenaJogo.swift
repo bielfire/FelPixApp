@@ -31,7 +31,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     var estrelasLabel = SKLabelNode()
     var distanciaLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
-    var testoInicio = SKLabelNode()
+    var textoInicio = SKLabelNode()
     let autoScaleAndRemoveAction = SKAction.sequence([SKAction.scale(to: 3.5, duration: 0.15), SKAction.removeFromParent()])
     let alphaAction = SKAction.fadeAlpha(by: 0, duration: 0.15)
     
@@ -167,28 +167,79 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         hudSemente.addChild(sementesLabel)
         hudEstrela.addChild(estrelasLabel)
         
+        textoInicio = SKLabelNode()
+        textoInicio.fontName = "True Crimes"
+        textoInicio.fontSize = 25
+        textoInicio.text = "Toque para Iniciar"
+        textoInicio.position.x = self.frame.midX
+        textoInicio.position.y = self.frame.size.height / 2 + 50
+        textoInicio.alpha = 0.65
+        textoInicio.zPosition = 11
+        self.addChild(textoInicio)
+        
+        scoreLabel.isHidden = true
+        
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        if !_comecou {
-            felpudo.physicsBody = SKPhysicsBody(circleOfRadius: felpudo.size.height / 2)
-            felpudo.physicsBody?.isDynamic = true
-            felpudo.physicsBody?.allowsRotation = false
-            felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        for touch: AnyObject in touches {
+            let location: CGPoint! = touch.location(in: self)
+            let nodeAtPoint = self.atPoint(location)
             
-            felpudo.physicsBody?.categoryBitMask = grupoFelpudo
-            felpudo.physicsBody?.contactTestBitMask = grupoCano
-            felpudo.physicsBody?.collisionBitMask = grupoMarcadores
-            
-            _comecou = true
-            _ = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+            if (nodeAtPoint.name == "botaoReplay") {
+                self.removeAllActions()
+                let reveal = SKTransition.flipHorizontal(withDuration: 1)
+                let scene = CenaJogo(size: self.size)
+                self.view?.presentScene(scene, transition:reveal)
+            }
+            if (nodeAtPoint.name == "botaoInicio") {
+                self.removeAllActions()
+                let reveal = SKTransition.doorsCloseVertical(withDuration: 1)
+                let scene = MenuInicio(size: self.size)
+                self.view?.presentScene(scene, transition:reveal)
+            }
+            if (nodeAtPoint.name == "hudSemente") {
+                if ((numeroItemSementes > 0) && !_acabou) {
+                    numeroItemSementes -= 1
+                    sementesLabel.text = "\(numeroItemSementes)"
+                    //ficaInvisivelOn()
+                }
+            }
+            if  (nodeAtPoint.name == "hudEstrela") {
+                if ((numeroItemEstrelas > 0) && !_acabou) {
+                    numeroItemEstrelas -= 1
+                    estrelasLabel.text = "\(numeroItemEstrelas)"
+                    //ficaInvencivelOn()
+                }
+            }
         }
-        else {
-            felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+        
+        if !_acabou {
+            if !_comecou {
+                felpudo.physicsBody = SKPhysicsBody(circleOfRadius: felpudo.size.height / 2)
+                felpudo.physicsBody?.isDynamic = true
+                felpudo.physicsBody?.allowsRotation = false
+                felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+                
+                felpudo.physicsBody?.categoryBitMask = grupoFelpudo
+                felpudo.physicsBody?.contactTestBitMask = grupoCano
+                felpudo.physicsBody?.collisionBitMask = grupoMarcadores
+                
+                textoInicio.isHidden = true
+                scoreLabel.isHidden = false
+                _comecou = true
+                _ = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+                _ = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(contaDistancia), userInfo: nil, repeats: true)
+            }
+            else {
+                felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+            }
         }
     }
+    
     override func update( _ currentTime: CFTimeInterval) {
         if _comecou {
             let num = felpudo.physicsBody!.velocity.dy as CGFloat
@@ -213,7 +264,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func sorteiaObjetos() {
-        let sorteiaObjeto = Int(arc4random_uniform(4) + 1)
+        let sorteiaObjeto = Int(arc4random_uniform(10) + 1)
         if sorteiaObjeto == 1 {criaObjetoCanos()}
         if sorteiaObjeto == 2 {criaObjetoSemente()}
         if sorteiaObjeto == 3 {criaObjetoEstrela()}
@@ -221,6 +272,16 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         
         _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
     }
+    // @objc func sorteiaObjetos() {
+    //let sorteiaObjeto = Int(arc4random_uniform(10) + 1)
+    
+    //  if sorteiaObjeto < 5 {criaObjetoCanos()}
+    //    if (sorteiaObjeto >= 5) &&  (sorteiaObjeto < 9) {criaObjetoFlecha()}
+    //      if sorteiaObjeto == 9 {criaObjetoEstrela()}
+    //        if sorteiaObjeto == 10 {criaObjetoSemente()}
+    
+    //          _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+    // }
     
     @objc func criaObjetoCanos() {
         let vao = SKNode()
@@ -357,19 +418,25 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     }
     
     func didEnd(_ contact: SKPhysicsContact) {
-        if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
-            if(contact.bodyA.node?.name == "vao") {
-                contact.bodyA.node?.removeFromParent()
+        if !_acabou {
+            if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
+                if(contact.bodyA.node?.name == "vao") {
+                    score += 1
+                    contact.bodyA.node?.removeFromParent()
+                }
+                scoreLabel.text = "\(score)"
             }
         }
     }
+    
     func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {
-        }
+        if contact.bodyA.categoryBitMask == grupoMarcadores || contact.bodyB.categoryBitMask == grupoMarcadores {}
         
         let bodyANode = contact.bodyA.node
         
         if (bodyANode?.name == "cano") {
+            
+            _ = Timer.scheduledTimer(timeInterval: TimeInterval(1), target: self, selector: #selector(botoesGameOver), userInfo: nil, repeats: false)
             _acabou = true
             objetoDummyMoveCena.speed = 0
             imagemFundo.speed = 0
@@ -377,11 +444,17 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         }
         
         if(bodyANode?.name == "Semente") {
+            numeroItemSementes += 1
+            sementesLabel.text = "\(numeroItemSementes)"
+            
             self.criaFumacinha(objetoPos: bodyANode!.parent!.position)
             bodyANode?.removeFromParent()
         }
         
         if(bodyANode?.name == "Estrela") {
+            numeroItemEstrelas += 1
+            estrelasLabel.text = "\(numeroItemEstrelas)"
+            
             self.criaFumacinha(objetoPos: bodyANode!.parent!.position)
             bodyANode?.removeFromParent()
         }
@@ -398,4 +471,42 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         fumacinha.zPosition = 20
         objetoDummyMoveCena.addChild(fumacinha)
     }
+    
+    @objc func contaDistancia() {
+        if !_acabou {
+            distanciaPercorrida += 1
+            distanciaLabel.text = "Metros: \(distanciaPercorrida)"
+        }
+    }
+    
+    @objc func botoesGameOver() {
+        
+        var botaoInicio: SKSpriteNode = SKSpriteNode()
+        var botaoReplay: SKSpriteNode = SKSpriteNode()
+        botaoInicio = SKSpriteNode(imageNamed: "botaoSair")
+        botaoInicio.texture!.filteringMode = .nearest
+        botaoInicio.setScale(3)
+        botaoInicio.position.x = self.size.width / 2
+        botaoInicio.position.y = self.size.height / 2 - 30
+        botaoInicio.name = "botaoInicio"
+        
+        botaoReplay = SKSpriteNode(imageNamed: "botaoReplay")
+        botaoReplay.texture!.filteringMode = .nearest
+        botaoReplay.setScale(3)
+        botaoReplay.position.x = self.size.width / 2
+        botaoReplay.position.y = self.size.height / 2 + 50
+        botaoReplay.name = "botaoReplay"
+        botaoInicio.position.x += 400
+        botaoReplay.position.x += 400
+        botaoInicio.zPosition = 12
+        botaoReplay.zPosition = 12
+        
+        let acaoEntraBotao = SKAction.moveBy(x: -400, y: 0, duration: 0.5)
+        botaoReplay.run(SKAction.sequence([SKAction.wait(forDuration: 0.1), acaoEntraBotao]))
+        botaoInicio.run(SKAction.sequence([SKAction.wait(forDuration: 0.5), acaoEntraBotao]))
+        
+        self.addChild(botaoReplay)
+        self.addChild(botaoInicio)
+    }
 }
+
