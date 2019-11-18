@@ -32,6 +32,8 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     var distanciaLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
     var textoInicio = SKLabelNode()
+    var estadoInvisivel = false
+    var estadoInvencivel = false
     let autoScaleAndRemoveAction = SKAction.sequence([SKAction.scale(to: 3.5, duration: 0.15), SKAction.removeFromParent()])
     let alphaAction = SKAction.fadeAlpha(by: 0, duration: 0.15)
     
@@ -203,25 +205,25 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
                 if ((numeroItemSementes > 0) && !_acabou) {
                     numeroItemSementes -= 1
                     sementesLabel.text = "\(numeroItemSementes)"
-                    //ficaInvisivelOn()
+                    ficaInvisivelOn()
                 }
             }
             if  (nodeAtPoint.name == "hudEstrela") {
                 if ((numeroItemEstrelas > 0) && !_acabou) {
                     numeroItemEstrelas -= 1
                     estrelasLabel.text = "\(numeroItemEstrelas)"
-                    //ficaInvencivelOn()
+                    ficaInvencivelOn()
                 }
             }
         }
         
         if !_acabou {
             if !_comecou {
-                felpudo.physicsBody = SKPhysicsBody(circleOfRadius: felpudo.size.height / 2)
+                felpudo.physicsBody = SKPhysicsBody(circleOfRadius: felpudo.size.height / 3)
                 felpudo.physicsBody?.isDynamic = true
                 felpudo.physicsBody?.allowsRotation = false
                 felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+                felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
                 
                 felpudo.physicsBody?.categoryBitMask = grupoFelpudo
                 felpudo.physicsBody?.contactTestBitMask = grupoCano
@@ -235,7 +237,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             }
             else {
                 felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+                felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 60))
             }
         }
     }
@@ -434,7 +436,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         
         let bodyANode = contact.bodyA.node
         
-        if (bodyANode?.name == "cano") {
+        if ((bodyANode?.name == "cano") && !estadoInvencivel && !estadoInvisivel) {
             
             _ = Timer.scheduledTimer(timeInterval: TimeInterval(1), target: self, selector: #selector(botoesGameOver), userInfo: nil, repeats: false)
             _acabou = true
@@ -507,6 +509,71 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(botaoReplay)
         self.addChild(botaoInicio)
+    }
+    func ficaInvencivelOn() {
+        if !estadoInvencivel {
+            estadoInvencivel = true
+            _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(ficaInvencivelOff), userInfo: nil, repeats: false)
+            self.physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+            felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            apagaBotoesHud()
+            self.backgroundColor = UIColor.white
+            physicsWorld.speed = 2
+            speed = 2
+        }
+    }
+    @objc func ficaInvencivelOff() {
+        if estadoInvencivel {
+            estadoInvencivel = false
+            felpudo.run(SKAction.sequence([SKAction.fadeAlpha(to: 1, duration: 0.5), SKAction.wait(forDuration: 0.5), SKAction.run( { () -> Void in})]))
+            acendeBotoesHud()
+            self.physicsWorld.gravity = CGVector(dx: 0, dy: -9.8)
+            felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+            physicsWorld.speed = 1
+            speed = 1
+            self.backgroundColor = UIColor.black
+        }
+    }
+    func ficaInvisivelOn() {
+        if !estadoInvisivel {
+            estadoInvisivel = true
+            _ = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(ficaInvisivelOff), userInfo: nil, repeats: false)
+            felpudo.run(SKAction.fadeAlpha(by: 0.25, duration: 0.5))
+            apagaBotoesHud()
+        }
+    }
+    @objc func ficaInvisivelOff() {
+        if estadoInvisivel {
+            felpudo.run(SKAction.sequence([SKAction.fadeAlpha(to: 1, duration: 0.5), SKAction.wait(forDuration: 0.5), SKAction.run({ () -> Void in self.estadoInvisivel = false
+                self.acendeBotoesHud()
+            })]))
+        }
+    }
+    func apagaBotoesHud() {
+        hudSemente.run(SKAction.fadeAlpha(to: 0.15, duration: 0.5))
+        sementesLabel.run(SKAction.fadeAlpha(to: 0.15, duration: 0.5))
+        
+        hudEstrela.run(SKAction.fadeAlpha(to: 0.15, duration: 0.5))
+        estrelasLabel.run(SKAction.fadeAlpha(to: 0.15, duration: 0.5))
+        
+        hudEstrela.name = "xxx"
+        hudSemente.name = "xxx"
+        sementesLabel.name = "xxx"
+        estrelasLabel.name = "xxx"
+    }
+    func acendeBotoesHud() {
+        hudSemente.run(SKAction.fadeAlpha(to: 1, duration: 0.5))
+        sementesLabel.run(SKAction.fadeAlpha(to: 1, duration: 0.5))
+        
+        hudEstrela.run(SKAction.fadeAlpha(to: 1, duration: 0.5))
+        estrelasLabel.run(SKAction.fadeAlpha(to: 1, duration: 0.5))
+        
+        hudEstrela.name = "hudEstrela"
+        hudSemente.name = "hudSemente"
+        sementesLabel.name = "hudSemente"
+        estrelasLabel.name = "hudEstrela"
+        
     }
 }
 
