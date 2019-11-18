@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		433971BA236114AA00CEFE9F /* MenuInicio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433971B9236114AA00CEFE9F /* MenuInicio.swift */; };
+		4344E4C423833A8D00520FEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4344E4C223833A8D00520FEB /* Assets.xcassets */; };
+		4344E4C623833F4800520FEB /* particulaVelocidade.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4344E4C523833F4800520FEB /* particulaVelocidade.sks */; };
 		434815F92372036C00C46CB0 /* CenaJogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434815F82372036C00C46CB0 /* CenaJogo.swift */; };
 		434815FB23720BE700C46CB0 /* CenaLoja.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434815FA23720BE700C46CB0 /* CenaLoja.swift */; };
 		4369D72E23623BB300D8AB58 /* botaoIniciar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4369D70423623BB300D8AB58 /* botaoIniciar@2x.png */; };
@@ -79,6 +81,8 @@
 
 /* Begin PBXFileReference section */
 		433971B9236114AA00CEFE9F /* MenuInicio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuInicio.swift; sourceTree = "<group>"; };
+		4344E4C223833A8D00520FEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4344E4C523833F4800520FEB /* particulaVelocidade.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = particulaVelocidade.sks; sourceTree = "<group>"; };
 		434815F82372036C00C46CB0 /* CenaJogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenaJogo.swift; sourceTree = "<group>"; };
 		434815FA23720BE700C46CB0 /* CenaLoja.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenaLoja.swift; sourceTree = "<group>"; };
 		4369D70423623BB300D8AB58 /* botaoIniciar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "botaoIniciar@2x.png"; sourceTree = "<group>"; };
@@ -275,6 +279,8 @@
 				434815FE23721D2600C46CB0 /* Assets */,
 				434815FC23721CC600C46CB0 /* Cenas */,
 				434815FD23721D0000C46CB0 /* ViewController */,
+				4344E4C223833A8D00520FEB /* Assets.xcassets */,
+				4344E4C523833F4800520FEB /* particulaVelocidade.sks */,
 			);
 			path = FelPixApp;
 			sourceTree = "<group>";
@@ -405,6 +411,7 @@
 				4369D74D23623BB300D8AB58 /* somGameOver.mp3 in Resources */,
 				4369D74A23623BB300D8AB58 /* somBolhaShot.mp3 in Resources */,
 				4369D74223623BB300D8AB58 /* botaoLojaSemente@2x.png in Resources */,
+				4344E4C423833A8D00520FEB /* Assets.xcassets in Resources */,
 				4369D74E23623BB300D8AB58 /* somInvisibleEnds.mp3 in Resources */,
 				4369D75223623BB300D8AB58 /* somScore.mp3 in Resources */,
 				4369D72E23623BB300D8AB58 /* botaoIniciar@2x.png in Resources */,
@@ -415,6 +422,7 @@
 				436A43AD235FC572007CA682 /* Assets.xcassets in Resources */,
 				4369D74123623BB300D8AB58 /* bgIntro@2x.png in Resources */,
 				4369D75423623BB300D8AB58 /* somPickStar.mp3 in Resources */,
+				4344E4C623833F4800520FEB /* particulaVelocidade.sks in Resources */,
 				436A43B0235FC572007CA682 /* LaunchScreen.storyboard in Resources */,
 				4369D73823623BB300D8AB58 /* felpudoVoa3@2x.png in Resources */,
 				4369D73323623BB300D8AB58 /* pena@2x.png in Resources */,

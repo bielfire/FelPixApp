@@ -23,6 +23,8 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     var imagemFundo: SKSpriteNode = SKSpriteNode()
     var score: Int = 0
     var distanciaPercorrida: Int = 0
+    var recordePontos: Int = 0
+    var recordeDistancia: Int = 0
     var numeroItemEstrelas: Int = 0
     var numeroItemSementes: Int = 0
     var hudSemente = SKSpriteNode()
@@ -87,7 +89,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         let chaoDummy = SKNode()
         chaoDummy.position = CGPoint(x: self.size.width/2, y: -100)
         chaoDummy.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width:self.frame.size.width, height:1))
-        chaoDummy.physicsBody?.isDynamic = false
+        chaoDummy.physicsBody?.isDynamic = true
         chaoDummy.name = "Chao"
         
         self.addChild(chaoDummy)
@@ -182,7 +184,6 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         scoreLabel.isHidden = true
         
     }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         for touch: AnyObject in touches {
@@ -217,7 +218,9 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if !_acabou {
+        if !_acabou && !estadoInvencivel {
+            self.criaParticulasPenas()
+            
             if !_comecou {
                 felpudo.physicsBody = SKPhysicsBody(circleOfRadius: felpudo.size.height / 3)
                 felpudo.physicsBody?.isDynamic = true
@@ -265,25 +268,25 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    //@objc func sorteiaObjetos() {
+    //let sorteiaObjeto = Int(arc4random_uniform(10) + 1)
+    //if sorteiaObjeto == 1 {criaObjetoCanos()}
+    //if sorteiaObjeto == 2 {criaObjetoSemente()}
+    //if sorteiaObjeto == 3 {criaObjetoEstrela()}
+    //if sorteiaObjeto == 4 {criaObjetoFlecha()}
+    
+    //_ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
+    //}
     @objc func sorteiaObjetos() {
         let sorteiaObjeto = Int(arc4random_uniform(10) + 1)
-        if sorteiaObjeto == 1 {criaObjetoCanos()}
-        if sorteiaObjeto == 2 {criaObjetoSemente()}
-        if sorteiaObjeto == 3 {criaObjetoEstrela()}
-        if sorteiaObjeto == 4 {criaObjetoFlecha()}
+        
+        if sorteiaObjeto < 5 {criaObjetoCanos()}
+        if (sorteiaObjeto >= 5) &&  (sorteiaObjeto < 9) {criaObjetoFlecha()}
+        if sorteiaObjeto == 9 {criaObjetoEstrela()}
+        if sorteiaObjeto == 10 {criaObjetoSemente()}
         
         _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
     }
-    // @objc func sorteiaObjetos() {
-    //let sorteiaObjeto = Int(arc4random_uniform(10) + 1)
-    
-    //  if sorteiaObjeto < 5 {criaObjetoCanos()}
-    //    if (sorteiaObjeto >= 5) &&  (sorteiaObjeto < 9) {criaObjetoFlecha()}
-    //      if sorteiaObjeto == 9 {criaObjetoEstrela()}
-    //        if sorteiaObjeto == 10 {criaObjetoSemente()}
-    
-    //          _ = Timer.scheduledTimer(timeInterval: TimeInterval(3.5 / speed), target: self, selector: #selector(sorteiaObjetos), userInfo: nil, repeats: false)
-    // }
     
     @objc func criaObjetoCanos() {
         let vao = SKNode()
@@ -444,7 +447,6 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             imagemFundo.speed = 0
             felpudo.physicsBody?.applyImpulse(CGVector(dx: -100, dy: 0))
         }
-        
         if(bodyANode?.name == "Semente") {
             numeroItemSementes += 1
             sementesLabel.text = "\(numeroItemSementes)"
@@ -520,6 +522,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             self.backgroundColor = UIColor.white
             physicsWorld.speed = 2
             speed = 2
+            criaParticulasInvencivel()
         }
     }
     @objc func ficaInvencivelOff() {
@@ -529,7 +532,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
             acendeBotoesHud()
             self.physicsWorld.gravity = CGVector(dx: 0, dy: -9.8)
             felpudo.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 150))
+            felpudo.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 10))
             physicsWorld.speed = 1
             speed = 1
             self.backgroundColor = UIColor.black
@@ -575,5 +578,71 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         estrelasLabel.name = "hudEstrela"
         
     }
+    func criaParticulasPenas() {
+        let peninha: SKTexture = SKTexture(imageNamed: "pena")
+        let emissorPenas: SKEmitterNode = SKEmitterNode()
+        emissorPenas.particleTexture = peninha
+        emissorPenas.position.x = felpudo.position.x + 20
+        emissorPenas.position.y = felpudo.position.y + felpudo.size.height / 2
+        emissorPenas.particleBirthRate = 100
+        emissorPenas.numParticlesToEmit = 7
+        emissorPenas.particleLifetime = 1.3
+        emissorPenas.particleTexture?.filteringMode = .nearest
+        emissorPenas.xAcceleration = 0
+        emissorPenas.yAcceleration = 0
+        emissorPenas.particleSpeed = 100
+        emissorPenas.particleScaleRange = 200
+        emissorPenas.particleRotationSpeed = -10
+        emissorPenas.particleRotationRange = 4
+        emissorPenas.emissionAngle = 3
+        emissorPenas.emissionAngleRange = 3.14
+        emissorPenas.particleColorAlphaSpeed = 0.1
+        emissorPenas.particleColorAlphaRange = 1
+        emissorPenas.particleAlphaSequence =  SKKeyframeSequence(keyframeValues: [1,0], times: [1,0])
+        emissorPenas.particleScaleSequence = SKKeyframeSequence(keyframeValues: [3,0.5], times: [0,1])
+        emissorPenas.zPosition = 999
+        if estadoInvisivel||estadoInvencivel {
+            emissorPenas.alpha = 0.15
+        }
+        self.addChild(emissorPenas)
+        emissorPenas.run(SKAction.sequence([SKAction.wait(forDuration: 2), SKAction.removeFromParent()]))
+    }
+    func criaParticulasInvencivel() {
+        let estrelinha: SKTexture = SKTexture(imageNamed: "estrela")
+        let emissorEstrela: SKEmitterNode = SKEmitterNode()
+        emissorEstrela.particleTexture = estrelinha
+        emissorEstrela.particleBirthRate = 17
+        emissorEstrela.numParticlesToEmit = 10000
+        emissorEstrela.particleLifetime = 0.55
+        emissorEstrela.particleTexture?.filteringMode = .nearest
+        emissorEstrela.xAcceleration = 0
+        emissorEstrela.yAcceleration = 0
+        emissorEstrela.particleSpeed = 90
+        emissorEstrela.particleSpeedRange = 100
+        emissorEstrela.particleRotationSpeed = 5
+        emissorEstrela.particleRotationRange = 10
+        emissorEstrela.emissionAngleRange = CGFloat(M_PI*2)
+        emissorEstrela.particleAlphaSequence = SKKeyframeSequence(keyframeValues: [0,1,1,0], times: [0,0.15,0.75,1])
+        emissorEstrela.particleScaleSequence = SKKeyframeSequence(keyframeValues: [0.85,0.85,0], times: [0,0.75,1])
+        emissorEstrela.zPosition = 999
+        felpudo.addChild(emissorEstrela)
+        emissorEstrela.run(SKAction.sequence([SKAction.wait(forDuration: 10), SKAction.removeFromParent()]))
+        
+        let emitterPath: String = Bundle.main.path(forResource: "particulaVelocidade", ofType: "sks")!
+        let emitterNode = NSKeyedUnarchiver.unarchiveObject(withFile: emitterPath) as! SKEmitterNode
+        emitterNode.position.x = self.size.width + 50
+        emitterNode.position.y = self.size.height / 2
+        emitterNode.name = "emitterNode"
+        emitterNode.zPosition = 10
+        emitterNode.targetNode = self
+        emitterNode.particleTexture?.filteringMode = .nearest
+        self.addChild(emitterNode)
+        
+        emitterNode.run(SKAction.sequence([SKAction.wait(forDuration: 10), SKAction.removeFromParent()]))
+    }
+    //func salvarRecordes() {
+      //  if((UserDefaults.standard.integer(forKey: "recordePontos")) < score) {
+          //  recordePontos = score
+        //    NSUserDefauts.standardUserDefaultes().setInterger(recordePontos)
+    //}
 }
-
