@@ -60,6 +60,7 @@
 		436A43B0235FC572007CA682 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 436A43AE235FC572007CA682 /* LaunchScreen.storyboard */; };
 		436A43BB235FC572007CA682 /* FelPixAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436A43BA235FC572007CA682 /* FelPixAppTests.swift */; };
 		436A43C6235FC572007CA682 /* FelPixAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436A43C5235FC572007CA682 /* FelPixAppUITests.swift */; };
+		4385B9F12384A178008BD52A /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4385B9F02384A178008BD52A /* SKTAudio.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +140,7 @@
 		436A43C1235FC572007CA682 /* FelPixAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FelPixAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		436A43C5235FC572007CA682 /* FelPixAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FelPixAppUITests.swift; sourceTree = "<group>"; };
 		436A43C7235FC572007CA682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4385B9F02384A178008BD52A /* SKTAudio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,12 +277,13 @@
 			isa = PBXGroup;
 			children = (
 				436A43B1235FC572007CA682 /* Info.plist */,
+				4344E4C523833F4800520FEB /* particulaVelocidade.sks */,
 				436A439F235FC56F007CA682 /* AppDelegate.swift */,
+				4344E4C223833A8D00520FEB /* Assets.xcassets */,
 				434815FE23721D2600C46CB0 /* Assets */,
 				434815FC23721CC600C46CB0 /* Cenas */,
+				4385B9F22384B867008BD52A /* Helpers */,
 				434815FD23721D0000C46CB0 /* ViewController */,
-				4344E4C223833A8D00520FEB /* Assets.xcassets */,
-				4344E4C523833F4800520FEB /* particulaVelocidade.sks */,
 			);
 			path = FelPixApp;
 			sourceTree = "<group>";
@@ -301,6 +304,14 @@
 				436A43C7235FC572007CA682 /* Info.plist */,
 			);
 			path = FelPixAppUITests;
+			sourceTree = "<group>";
+		};
+		4385B9F22384B867008BD52A /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				4385B9F02384A178008BD52A /* SKTAudio.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -480,6 +491,7 @@
 				436A43A8235FC56F007CA682 /* GameViewController.swift in Sources */,
 				436A43A0235FC56F007CA682 /* AppDelegate.swift in Sources */,
 				434815FB23720BE700C46CB0 /* CenaLoja.swift in Sources */,
+				4385B9F12384A178008BD52A /* SKTAudio.swift in Sources */,
 				433971BA236114AA00CEFE9F /* MenuInicio.swift in Sources */,
 				434815F92372036C00C46CB0 /* CenaJogo.swift in Sources */,
 			);

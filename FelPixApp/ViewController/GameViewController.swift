@@ -17,7 +17,7 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
 
         let size = UIScreen.main.bounds.size
-        let scene = CenaJogo(size: size)
+        let scene = MenuInicio(size: size)
         scene.scaleMode = .aspectFill
         
         
@@ -26,7 +26,11 @@ class GameViewController: UIViewController {
         skView.showsPhysics = true
         skView.ignoresSiblingOrder = true
         skView.presentScene(scene)
+        
+        SKTAudio.sharedInstance().playBackgroundMusic(filename: "musicaLoop.mp3")
     }
+    
+    
  
 //override func shoudAutorotate() -> Bool {
 //        return true

@@ -12,12 +12,11 @@ class MenuInicio: SKScene {
     // MARK: - Properties
     
     var imagemFundo: SKSpriteNode!
-    var recordePontos: Int = 33
-    var recordeDistancia: Int = 100
     
     // MARK: - Overrides
     
     override func didMove(to view: SKView) {
+        carregarJogo() 
         setupScene()
         setupIamgemFundo()
         setupBotaoIniciar()
@@ -39,10 +38,12 @@ class MenuInicio: SKScene {
                 let transicao = SKTransition.doorway(withDuration: 1)
                 let cena = CenaJogo(size: self.size)
                 self.view?.presentScene(cena, transition: transicao)
+                self.run(somClica)
             }
             
             if objetoTocado.name == "botaoRanking" {
                 print("Tocou botao Ranking!")
+                self.run(somClica)
             }
             
             if objetoTocado.name == "botaoLoja" {
@@ -51,10 +52,12 @@ class MenuInicio: SKScene {
                 let transicao = SKTransition.doorway(withDuration: 1)
                 let cena = CenaLoja(size: self.size)
                 self.view?.presentScene(cena, transition: transicao)
+               self.run(somClica)
             }
             
             if objetoTocado.name == "botaoSobre" {
                 print("Tocou botao Sobre!")
+                self.run(somClica)
             }
             
             //            else {
