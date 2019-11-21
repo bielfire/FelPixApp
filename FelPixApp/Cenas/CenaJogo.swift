@@ -9,20 +9,11 @@
 import SpriteKit
 import Foundation
 
-var distanciaPercorrida: Int = 0
-var recordePontos: Int = 0
-var recordeDistancia: Int = 0
-var numeroItemEstrelas: Int = 0
-var numeroItemSementes: Int = 0
-var somClica = SKAction.playSoundFileNamed("somClick.mp3", waitForCompletion: false)
-
-
-
 class CenaJogo: SKScene, SKPhysicsContactDelegate {
     
     // MRK: - Properties
     
-
+    
     var halfWidth: CGFloat!
     let backgroundVolumeInPlay: Float = 0.8
     let backgroundVolumeOutPlay: Float = 1.0
@@ -121,6 +112,8 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         felpudo.position.y = self.size.height/2
         felpudo.zPosition = 10
         felpudo.run(SKAction.repeatForever(animacaoFelpudoVoa))
+        
+        if playerSombraSelecionado{felpudo.run(SKAction.colorize(with: UIColor.black, colorBlendFactor: 1, duration: 0))}
         
         self.addChild(felpudo)
         
@@ -250,7 +243,7 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
                 }
             }
             if  (nodeAtPoint.name == "hudEstrela") {
-                if ((numeroItemEstrelas > 0) && !_acabou) {
+                if ((numeroItemEstrelas > 0) || playerSombraSelecionado && !_acabou) {
                     numeroItemEstrelas -= 1
                     estrelasLabel.text = "\(numeroItemEstrelas)"
                     ficaInvencivelOn()
@@ -663,6 +656,11 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
         if estadoInvisivel||estadoInvencivel {
             emissorPenas.alpha = 0.15
         }
+        
+        if playerSombraSelecionado {
+            emissorPenas.particleColor = UIColor.black
+            emissorPenas.particleColorBlendFactor = 1
+        }
         self.addChild(emissorPenas)
         emissorPenas.run(SKAction.sequence([SKAction.wait(forDuration: 2), SKAction.removeFromParent()]))
         self.run(somFelpudoVoa)
@@ -718,6 +716,8 @@ class CenaJogo: SKScene, SKPhysicsContactDelegate {
     func salvarJogo() {
         UserDefaults.standard.set(numeroItemSementes, forKey: "numeroSementes")
         UserDefaults.standard.set(numeroItemEstrelas, forKey: "numeroEstrelas")
+        UserDefaults.standard.set(comprouPlayerSombra, forKey: "comprouPlayerSombra")
+        
     }
 }
 

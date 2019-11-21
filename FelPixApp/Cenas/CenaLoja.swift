@@ -44,6 +44,10 @@ class CenaLoja: SKScene {
                 let cena = MenuInicio(size: self.size)
                 self.view?.presentScene(cena, transition: transicao)
             }
+            
+            if (nodeAtPoint.name == "botaoSair") {
+                
+            }
         }
     }
     

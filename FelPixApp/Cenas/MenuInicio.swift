@@ -33,12 +33,14 @@ class MenuInicio: SKScene {
             let objetoTocado = self.atPoint(posicaoTocada)
             
             if objetoTocado.name == "botaoIniciar" {
-                print("Tocou botao iniciar!")
-                
-                let transicao = SKTransition.doorway(withDuration: 1)
-                let cena = CenaJogo(size: self.size)
-                self.view?.presentScene(cena, transition: transicao)
-                self.run(somClica)
+                if comprouPlayerSombra {
+                    NotificationCenter.default.post(name: GameNotification.criarAlertPlayer, object: nil)
+                } else {
+                    let transicao = SKTransition.doorway(withDuration: 1)
+                    let cena = CenaJogo(size: self.size)
+                    self.view?.presentScene(cena, transition: transicao)
+                    self.run(somClica)
+                }
             }
             
             if objetoTocado.name == "botaoRanking" {
@@ -52,17 +54,19 @@ class MenuInicio: SKScene {
                 let transicao = SKTransition.doorway(withDuration: 1)
                 let cena = CenaLoja(size: self.size)
                 self.view?.presentScene(cena, transition: transicao)
-               self.run(somClica)
-            }
-            
-            if objetoTocado.name == "botaoSobre" {
-                print("Tocou botao Sobre!")
                 self.run(somClica)
             }
             
-            //            else {
-            //                print("Nao e botao iniciar. \( objetoTocado.name ?? "naoIndentificado")")
-            //            }
+            if objetoTocado.name == "botaoSobre" {
+                let facebookURL = NSURL(string: "fb://profile/407226039437907")!
+                if UIApplication.shared.canOpenURL(facebookURL as URL) {
+                    UIApplication.shared.canOpenURL(facebookURL as URL)
+                } else {
+                    UIApplication.shared.openURL(NSURL(string: "https://www.facebook.com/felpudogames")! as URL)
+                }
+            }
+            self.run(somClica)
+            
         }
     }
     
